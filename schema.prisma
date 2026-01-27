@@ -10,11 +10,12 @@ generator db {
 }
 
 model Users {
-    id         Int       @id @default(autoincrement())
-    created_at DateTime  @default(now())
-    updated_at DateTime  @default(now()) @updatedAt
-    deleted_at DateTime?
-    email      String    @unique
-    password   String
-    fullname   String
+    id              Int       @id @default(autoincrement())
+    created_at      DateTime  @default(now())
+    updated_at      DateTime  @default(now()) @updatedAt
+    deleted_at      DateTime?
+    email           String    @unique
+    password        String
+    fullname        String
+    email_confirmed Boolean   @default(false)
 }

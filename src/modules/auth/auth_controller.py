@@ -32,6 +32,8 @@ class AuthController:
             raise NotFoundException("User not found")
         if not user.password == body.password:
             raise UnauthorizedException("Invalid credentials")
+        if not user.email_confirmed:
+            raise UnauthorizedException("Email not confirmed")
 
         response = ResponseMapper(
             data=user.model_dump(exclude={"password", "deleted_at"}),
@@ -82,7 +84,6 @@ class AuthController:
         reset_password_token = self.auth_service.create_token(
             user.id, TokenType.RESET_PASSWORD
         )
-        print(reset_password_token)
         # TODO: Send password reset email
 
         return ResponseMapper(message="Password reset email sent successfully")

@@ -33,7 +33,6 @@ class AuthService:
             "nbf": now,
             "type": token_type.value,
         }
-        print(f"Creating {token_type.value} token: now={now}, exp={expiry}")
         token = jwt.encode(payload, self.SECRETS[token_type], algorithm="HS256")
         return token
 
@@ -45,11 +44,6 @@ class AuthService:
 
     def validate_token(self, token: str, token_type: TokenType) -> int | None:
         try:
-            # Debug: Check what's inside the token without verification
-            unverified = jwt.get_unverified_claims(token)
-            print(f"Validating {token_type.value} token: {unverified}")
-            print(f"Current UTC: {int(datetime.now(timezone.utc).timestamp())}")
-
             payload = jwt.decode(
                 token,
                 self.SECRETS[token_type],
@@ -57,14 +51,12 @@ class AuthService:
                 options={"leeway": 60},
             )
             if payload.get("type") != token_type.value:
-                print(f"Type mismatch: expected {token_type.value}, got {payload.get('type')}")
                 return None
             try:
                 return int(payload.get("sub"))
             except (ValueError, TypeError):
                 return None
         except JWTError as e:
-            print("JWTError", e)
             return None
 
     def login(self, user_id: int, response: Response) -> Response:
