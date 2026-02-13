@@ -3,10 +3,10 @@ import sys
 
 from nest.core import Module, PyNestFactory
 from src.config.swagger_config import setup_swagger
-from src.database.prisma_service import PrismaService
 from src.modules.auth.auth_module import AuthModule
 from src.modules.user.user_module import UserModule
-from src.config.env_config import is_development, is_production
+from src.core.services import PrismaService
+from src.config.env_config import is_development
 from src.core.exceptions.handlers import setup_exception_handlers
 
 # Configure logging

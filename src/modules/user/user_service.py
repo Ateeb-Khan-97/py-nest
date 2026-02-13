@@ -2,7 +2,8 @@ from typing import List
 from nest.core import Injectable
 from prisma.models import Users
 from prisma.types import UsersCreateInput, UsersUpdateInput, UsersWhereInput
-from src.database.prisma_service import PrismaService
+
+from src.core.services import PrismaService
 
 
 @Injectable()
