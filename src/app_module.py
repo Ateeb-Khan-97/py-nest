@@ -1,10 +1,9 @@
 import logging
 import sys
-from contextlib import asynccontextmanager
-from typing import AsyncGenerator
+
 from nest.core import Module, PyNestFactory
 from src.config.swagger_config import setup_swagger
-from src.database.prisma_service import prisma_service
+from src.database.prisma_service import PrismaService
 from src.modules.auth.auth_module import AuthModule
 from src.modules.user.user_module import UserModule
 from src.config.env_config import is_development, is_production
@@ -19,22 +18,9 @@ logging.basicConfig(
 logging.getLogger("pynest").setLevel(logging.WARNING)
 
 
-@Module(imports=[AuthModule, UserModule])
+@Module(imports=[AuthModule, UserModule], providers=[PrismaService])
 class AppModule:
     pass
-
-
-@asynccontextmanager
-async def lifespan(_) -> AsyncGenerator[None, None]:
-    # Startup
-    await prisma_service.connect()
-    logging.info("Started server at http://localhost:8000")
-    if not is_production:
-        logging.info("ApiDocs is available at http://localhost:8000/api/docs")
-
-    yield
-    # Shutdown
-    await prisma_service.disconnect()
 
 
 app = PyNestFactory.create(
@@ -45,7 +31,6 @@ app = PyNestFactory.create(
     debug=is_development,
     docs_url=None,
     redoc_url=None,
-    lifespan=lifespan,
 )
 
 

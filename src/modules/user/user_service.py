@@ -2,14 +2,14 @@ from typing import List
 from nest.core import Injectable
 from prisma.models import Users
 from prisma.types import UsersCreateInput, UsersUpdateInput, UsersWhereInput
-from src.database.prisma_service import prisma_service
+from src.database.prisma_service import PrismaService
 
 
 @Injectable()
 class UserService:
 
-    def __init__(self):
-        self.db = prisma_service.client
+    def __init__(self, db: PrismaService):
+        pass
 
     async def find_one_by_id(self, id: int) -> Users | None:
         return await self.db.users.find_first(where={"id": id})

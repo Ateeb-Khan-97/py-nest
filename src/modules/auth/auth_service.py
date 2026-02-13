@@ -56,7 +56,7 @@ class AuthService:
                 return int(payload.get("sub"))
             except (ValueError, TypeError):
                 return None
-        except JWTError as e:
+        except JWTError:
             return None
 
     def login(self, user_id: int, response: Response) -> Response:
